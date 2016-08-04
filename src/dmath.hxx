@@ -1,14 +1,14 @@
 #ifndef DMATH_HXX
 #define DMATH_HXX
 
-#include <iostream>
-#include <cmath>
-#include <vector>
-#include <tuple>
-#include <set>
-#include <utility>
-#include <limits>
 #include <algorithm>
+#include <cmath>
+#include <cstdint>
+#include <limits>
+#include <set>
+#include <tuple>
+#include <utility>
+#include <vector>
 
 namespace dmath
 {
@@ -18,7 +18,7 @@ namespace dmath
     /**
      * Compute the prime numbers in the interval [2, N] and return them.
      */
-    std::vector<size_t> eratosthenes_impl(size_t N)
+    std::vector<size_t> eratosthenes(size_t N)
     {
     	std::vector<bool> marked(N+1);
     	marked[0] = true;
@@ -72,7 +72,7 @@ namespace dmath
      * The output is a vector of pairs (p, e), where p is a prime that divides n
      * and e is the maximum exponent such that p^e divides n.
      */
-    std::vector<Pair> prime_factors_impl(size_t n)
+    std::vector<Pair> prime_factors(size_t n)
     {
         std::vector<Pair> factors;
         detail::div(factors, n, 2);
@@ -99,7 +99,7 @@ namespace dmath
     /**
      * Returns true if n is prime, else false.
      */
-    bool is_prime_impl(size_t n)
+    bool is_prime(size_t n)
     {
         if (n <= 1)
             return false;
@@ -152,7 +152,7 @@ namespace dmath
      * was reached before finding the period length.
      */
     std::pair<std::vector<size_t>, size_t>
-    cfr_impl(size_t d, size_t max_iter = 2000)
+    cfr(size_t d, size_t max_iter = 2000)
     {
         using namespace std;
 
@@ -207,7 +207,7 @@ namespace dmath
     /**
      * Return (numerator, denominator) of the n-th approximation fraction of the given continued fraction.
      */
-    std::pair<size_t, size_t> approx_cfr_impl(size_t n, std::vector<size_t> const & frac, size_t p)
+    std::pair<size_t, size_t> approx_cfr(size_t n, std::vector<size_t> const & frac, size_t p)
     {
         using namespace std;
 
