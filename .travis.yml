@@ -4,7 +4,7 @@ python:
   - "3.5"
 
 install:
-  - export CXX="g++-4.8"
+  - export CXX="g++-5" CC="gcc-5"
   - pip install cython
   - python setup.py build_ext --inplace
 
@@ -16,5 +16,8 @@ compiler:
 
 addons:
   apt:
+    sources:
+      - ubuntu-toolchain-r-test
     packages:
-      g++-4.8
+      - gcc-5
+      - g++-5
