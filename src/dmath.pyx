@@ -4,7 +4,7 @@ from libcpp.vector cimport vector
 from libcpp.pair cimport pair
 from libcpp cimport bool
 
-cdef extern from "dmath.hxx":
+cdef extern from "dmath.hxx" namespace "dmath":
     cdef vector[pair[size_t, size_t]] prime_factors_impl(size_t)
     cdef vector[size_t] eratosthenes_impl(size_t)
     cdef bool is_prime_impl(size_t)
