@@ -13,7 +13,7 @@ ext = cythonize("src/dmath.pyx",
                 language="c++")
 
 if not sys.platform.startswith("win"):
-    ext[0].extra_compile_args = ["-O3 -std=c++11"]
+    ext[0].extra_compile_args = ["-O3", "-std=c++11"]
     ext[0].extra_link_args = ["-O3"]
 
 setup(
