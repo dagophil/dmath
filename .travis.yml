@@ -1,11 +1,20 @@
-language: python
+language: cpp, python
 
 python:
   - "3.5"
 
 install:
+  - export CXX="g++-4.8"
   - pip install cython
   - python setup.py build_ext --inplace
 
 script:
   - python -m unittest -v test
+
+compiler:
+  - gcc
+
+addons:
+  apt:
+    packages:
+      g++-4.8
