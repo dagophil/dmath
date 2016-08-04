@@ -1,23 +1,14 @@
-language: cpp, python
+sudo: required
+dist: trusty
+
+language: python
 
 python:
   - "3.5"
 
 install:
-  - export CXX="g++-5" CC="gcc-5"
   - pip install cython
   - python setup.py build_ext --inplace
 
 script:
   - python -m unittest -v test
-
-compiler:
-  - gcc
-
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-    packages:
-      - gcc-5
-      - g++-5
