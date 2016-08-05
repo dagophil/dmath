@@ -57,9 +57,9 @@ Compute all prime numbers up to the given number:
 Compute the continued fraction of the square root of the given number:
 ```
 >>> import dmath
->>> dmath.crf(2)  # sqrt(2) == [1; 2] with a period length of 1.
+>>> dmath.cfr(2)  # sqrt(2) == [1; 2] with a period length of 1.
 ([1, 2], 1)
->>> dmath.crf(13)  # sqrt(13) == [3; 1, 1, 1, 1, 6] with a period length of 5.
+>>> dmath.cfr(13)  # sqrt(13) == [3; 1, 1, 1, 1, 6] with a period length of 5.
 ([3, 1, 1, 1, 1, 6], 5)
 ```
 Use the first `n` numbers of the continued fraction to approximate the square root of `d`. Give either `d` itself or
@@ -68,6 +68,6 @@ the continued fraction of the square root of `d`:
 >>> import dmath
 >>> dmath.approx_cfr(3, d=2)  # sqrt(2) == [1; 2, 2, 2, ...] => approximation is 1+1/(2+1/(2+1/2)) == 17/12.
 (17, 12)
->>> dmath.approx_cfr(3, cfrac=cfr(2))
+>>> dmath.approx_cfr(3, cfrac=dmath.cfr(2))
 (17, 12)
 ```
