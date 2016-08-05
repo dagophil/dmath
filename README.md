@@ -2,7 +2,7 @@
 
 [![Travis CI Status](https://travis-ci.org/dagophil/dmath.svg?branch=master)](https://travis-ci.org/dagophil/dmath)
 
-# What is *dmath*?
+## What is *dmath*?
 
 *dmath* is a small library for C++ and python that provides some useful math functions.
 
