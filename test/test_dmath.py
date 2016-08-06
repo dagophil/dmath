@@ -1,47 +1,137 @@
+import os
 import unittest
 
 from dmath import is_prime, prime_factors, eratosthenes, cfr, approx_cfr
 
 
-class TestPrimeFunctions(unittest.TestCase):
+class TestIsPrime(unittest.TestCase):
 
-    def test_is_prime(self):
-        self.assertFalse(is_prime(0))
-        self.assertFalse(is_prime(1))
-        self.assertTrue(is_prime(2))
-        self.assertTrue(is_prime(3))
-        self.assertFalse(is_prime(4))
-        self.assertTrue(is_prime(5))
-        self.assertFalse(is_prime(6))
-        self.assertTrue(is_prime(7))
-        self.assertFalse(is_prime(8))
-        self.assertFalse(is_prime(9))
+    def test_first_ten_non_primes_are_non_prime(self):
+        for x in (0, 1, 4, 6, 8, 9, 10, 12, 14, 15):
+            self.assertFalse(is_prime(x))
 
-    def test_prime_factors(self):
-        self.assertEqual(prime_factors(7), [(7, 1)])
-        self.assertEqual(prime_factors(9), [(3, 2)])
-        self.assertEqual(prime_factors(60), [(2, 2), (3, 1), (5, 1)])
+    def test_first_ten_primes_are_prime(self):
+        for x in (2, 3, 5, 7, 11, 13, 17, 19, 23, 29):
+            self.assertTrue(is_prime(x))
 
-    def test_eratosthenes(self):
-        self.assertEqual(eratosthenes(10), [2, 3, 5, 7])
-        self.assertEqual(eratosthenes(28), [2, 3, 5, 7, 11, 13, 17, 19, 23])
-        self.assertEqual(eratosthenes(29), [2, 3, 5, 7, 11, 13, 17, 19, 23, 29])
-        self.assertEqual(eratosthenes(100), [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71,
-                                             73, 79, 83, 89, 97])
+    def test_is_prime_with_large_input(self):
+        for x in (49968367, 49968371, 49968377):
+            self.assertTrue(is_prime(x))
+        self.assertTrue(is_prime(2**31-1))
+
+    def test_is_not_prime_with_large_input(self):
+        for x in (49968365, 49968373, 49968379):
+            self.assertFalse(is_prime(x))
+        self.assertFalse(is_prime(2**31-3))
+
+    def test_is_prime_with_negative_input_raises_overflow_error(self):
+        for x in (-1, -5, -33):
+            with self.assertRaises(OverflowError):
+                is_prime(x)
 
 
-class TestContinuedFractions(unittest.TestCase):
+class TestPrimeFactors(unittest.TestCase):
 
-    def test_cfr(self):
-        self.assertEqual(cfr(2), ([1, 2], 1))
-        self.assertEqual(cfr(3), ([1, 1, 2], 2))
-        self.assertEqual(cfr(7), ([2, 1, 1, 1, 4], 4))
-        self.assertEqual(cfr(12), ([3, 2, 6], 2))
-        self.assertEqual(cfr(13), ([3, 1, 1, 1, 1, 6], 5))
+    def test_prime_factors_of_first_ten_numbers(self):
+        first_ten_factors = {1: [(1, 1)],
+                             2: [(2, 1)],
+                             3: [(3, 1)],
+                             4: [(2, 2)],
+                             5: [(5, 1)],
+                             6: [(2, 1), (3, 1)],
+                             7: [(7, 1)],
+                             8: [(2, 3)],
+                             9: [(3, 2)],
+                             10: [(2, 1), (5, 1)]}
+        for number, factors in first_ten_factors.items():
+            self.assertEqual(prime_factors(number), factors)
 
-    def test_approx_cfr(self):
+    def test_prime_factors_of_selected_numbers(self):
+        factors_of_selected_numbers = {60: [(2, 2), (3, 1), (5, 1)],
+                                       5400: [(2, 3), (3, 3), (5, 2)],
+                                       1139269212: [(2, 2), (3, 4), (17, 2), (23, 3)]}
+        for number, factors in factors_of_selected_numbers.items():
+            self.assertEqual(prime_factors(number), factors)
+
+    def test_prime_factors_of_zero_raises_runtime_error(self):
+        with self.assertRaises(RuntimeError):
+            prime_factors(0)
+
+    def test_prime_factors_with_negative_input_raises_overflow_error(self):
+        for x in (-1, -5, -33):
+            with self.assertRaises(OverflowError):
+                prime_factors(x)
+
+
+class TestEratosthenes(unittest.TestCase):
+
+    def test_eratosthenes_up_to_ten(self):
+        primes = {0: [],
+                  1: [],
+                  2: [2],
+                  3: [2, 3],
+                  4: [2, 3],
+                  5: [2, 3, 5],
+                  6: [2, 3, 5],
+                  7: [2, 3, 5, 7],
+                  8: [2, 3, 5, 7],
+                  9: [2, 3, 5, 7],
+                  10: [2, 3, 5, 7]}
+        for number, primes_until_number in primes.items():
+            self.assertEqual(eratosthenes(number), primes_until_number)
+
+    def test_eratosthenes_for_primes_until_one_million(self):
+        current_dir = os.path.dirname(__file__)
+        filename = os.path.join(current_dir, "prime_list.txt")
+        with open(filename, "r") as f:
+            prime_list = [int(line.strip()) for line in f]
+        self.assertEqual(eratosthenes(1000000), prime_list)
+
+    def test_eratosthenes_with_negative_input_raises_overflow_error(self):
+        for x in (-1, -5, -33):
+            with self.assertRaises(OverflowError):
+                eratosthenes(x)
+
+
+class TestCrf(unittest.TestCase):
+
+    def test_cfr_for_first_ten_non_squares(self):
+        cfr_up_to_fifteen = {2: ([1, 2], 1),
+                             3: ([1, 1, 2], 2),
+                             5: ([2, 4], 1),
+                             6: ([2, 2, 4], 2),
+                             7: ([2, 1, 1, 1, 4], 4),
+                             8: ([2, 1, 4], 2),
+                             10: ([3, 6], 1),
+                             11: ([3, 3, 6], 2),
+                             12: ([3, 2, 6], 2),
+                             13: ([3, 1, 1, 1, 1, 6], 5)}
+        for number, number_cfr in cfr_up_to_fifteen.items():
+            self.assertEqual(cfr(number), number_cfr)
+
+    def test_cfr_with_squares_raises_runtime_error(self):
+        for x in range(10):
+            with self.assertRaises(RuntimeError):
+                cfr(x*x)
+
+    def test_cfr_with_negative_input_raises_overflow_error(self):
+        for x in (-1, -5, -33):
+            with self.assertRaises(OverflowError):
+                cfr(x)
+
+
+class TestApproxCfr(unittest.TestCase):
+
+    def test_approx_cfr_with_number(self):
         self.assertEqual(approx_cfr(3, d=2), (17, 12))
+
+    def test_approx_cfr_with_cfr(self):
         self.assertEqual(approx_cfr(3, cfrac=cfr(5)), (161, 72))
+
+    def test_approx_cfr_with_negative_input_raises_overflow_error(self):
+        for x in (-1, -5, -33):
+            with self.assertRaises(OverflowError):
+                approx_cfr(3, d=x)
 
 
 if __name__ == "__main__":

@@ -1,4 +1,4 @@
-from .test_dmath import TestContinuedFractions, TestPrimeFunctions
+from .test_dmath import TestApproxCfr, TestCrf, TestEratosthenes, TestIsPrime, TestPrimeFactors
 
 
 def load_tests(loader, tests, pattern):
