@@ -5,11 +5,11 @@ from libcpp.pair cimport pair
 from libcpp cimport bool
 
 cdef extern from "dmath.hxx":
-    cdef vector[pair[size_t, size_t]] _cpp_prime_factors "dmath::prime_factors" (size_t)
+    cdef vector[pair[size_t, size_t]] _cpp_prime_factors "dmath::prime_factors" (size_t) except +
     cdef vector[size_t] _cpp_eratosthenes "dmath::eratosthenes" (size_t)
     cdef bool _cpp_is_prime "dmath::is_prime" (size_t)
-    cdef pair[vector[size_t], size_t] _cpp_cfr "dmath::cfr" (size_t) except *
-    cdef pair[vector[size_t], size_t] _cpp_cfr "dmath::cfr" (size_t, size_t) except *
+    cdef pair[vector[size_t], size_t] _cpp_cfr "dmath::cfr" (size_t) except +
+    cdef pair[vector[size_t], size_t] _cpp_cfr "dmath::cfr" (size_t, size_t) except +
     cdef pair[size_t, size_t] _cpp_approx_cfr "dmath::approx_cfr" (size_t, vector[size_t], size_t)
 
 def prime_factors(size_t n):

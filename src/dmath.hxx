@@ -6,6 +6,7 @@
 #include <cstdint>
 #include <limits>
 #include <set>
+#include <stdexcept>
 #include <tuple>
 #include <utility>
 #include <vector>
@@ -71,9 +72,13 @@ namespace dmath
      * Compute the prime factors of n.
      * The output is a vector of pairs (p, e), where p is a prime that divides n
      * and e is the maximum exponent such that p^e divides n.
+     * Throws std::runtime_error if input is zero.
      */
     std::vector<Pair> prime_factors(size_t n)
     {
+        if (n == 0)
+            throw std::runtime_error("Cannot compute prime factors of zero.");
+
         std::vector<Pair> factors;
         detail::div(factors, n, 2);
         
@@ -150,6 +155,7 @@ namespace dmath
      * Returns a pair (f, p) where f is the continued fraction of sqrt(d) and
      * p is the period length. If p == 0 then the maximum number of iterations 
      * was reached before finding the period length.
+     * Throws std::runtime_error if d is the square of a natural number.
      */
     std::pair<std::vector<size_t>, size_t>
     cfr(size_t d, size_t max_iter = 2000)
@@ -170,7 +176,7 @@ namespace dmath
         out.push_back(-b);
 
         if ((size_t)b*b == d)
-            throw runtime_error("cfr_impl(): d must not be a square.");
+            throw runtime_error("cfr(): d must not be a square.");
 
         // Iteratively compute the values of the continued fraction.
         for (size_t i = 0; i < max_iter; ++i)
