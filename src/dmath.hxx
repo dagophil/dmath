@@ -6,6 +6,7 @@
 #include <cstdint>
 #include <limits>
 #include <set>
+#include <stack>
 #include <stdexcept>
 #include <tuple>
 #include <utility>
@@ -266,12 +267,23 @@ namespace dmath
         if (n == 0)
             throw std::runtime_error("Cannot compute Farey sequence of order zero.");
 
-        std::vector<Pair> sequence = {left, right};
-        for (size_t i = 0; i+1 < sequence.size(); ++i)
+        std::vector<Pair> sequence = {left};
+        std::stack<Pair> stack;
+        stack.push(right);
+        while (!stack.empty())
         {
-            while (sequence[i].second + sequence[i+1].second <= n)
+            auto const & l = sequence.back();
+            auto const & r = stack.top();
+            auto const denominator = l.second + r.second;
+            if (denominator <= n)
             {
-                sequence.insert(sequence.begin()+i+1, {sequence[i].first+sequence[i+1].first, sequence[i].second+sequence[i+1].second});
+                auto const numerator = l.first + r.first;
+                stack.push({numerator, denominator});
+            }
+            else
+            {
+                sequence.push_back(r);
+                stack.pop();
             }
         }
         return sequence;
