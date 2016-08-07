@@ -40,6 +40,14 @@ True
 >>> dmath.is_prime(15)
 False
 ```
+
+Compute all prime numbers up to the given number:
+```
+>>> import dmath
+>>> dmath.eratosthenes(30)
+[2, 3, 5, 7, 11, 13, 17, 19, 23, 29]
+```
+
 Compute the prime factors of the given number:
 ```
 >>> import dmath
@@ -48,12 +56,16 @@ Compute the prime factors of the given number:
 >>> dmath.prime_factors(60)  # 7 == 2**2 + 3**1 + 5**1
 [(2, 2), (3, 1), (5, 1)]
 ```
-Compute all prime numbers up to the given number:
+
+Compute the value of Euler's totient function of the given number:
 ```
 >>> import dmath
->>> dmath.eratosthenes(30)
-[2, 3, 5, 7, 11, 13, 17, 19, 23, 29]
+>>> dmath.euler_phi(60)
+16
+>>> dmath.euler_phi(1139269212)
+341877888
 ```
+
 Compute the continued fraction of the square root of the given number:
 ```
 >>> import dmath
@@ -62,6 +74,7 @@ Compute the continued fraction of the square root of the given number:
 >>> dmath.cfr(13)  # sqrt(13) == [3; 1, 1, 1, 1, 6] with a period length of 5.
 ([3, 1, 1, 1, 1, 6], 5)
 ```
+
 Use the first `n` numbers of the continued fraction to approximate the square root of `d`. Give either `d` itself or
 the continued fraction of the square root of `d`:
 ```
