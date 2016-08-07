@@ -19,7 +19,7 @@ namespace dmath
     /**
      * Returns true if n is prime, else false.
      */
-    bool is_prime(size_t n)
+    bool is_prime(size_t const n)
     {
         if (n <= 1)
             return false;
@@ -36,7 +36,7 @@ namespace dmath
     /**
      * Compute the prime numbers in the interval [2, N] and return them.
      */
-    std::vector<size_t> eratosthenes(size_t N)
+    std::vector<size_t> eratosthenes(size_t const N)
     {
     	std::vector<bool> marked(N+1);
     	marked[0] = true;
@@ -127,8 +127,8 @@ namespace dmath
             return 0;
         if (n == 1)
             return 1;
-        const auto factors = prime_factors(n);
-        for (const auto& p : factors)
+        auto const factors = prime_factors(n);
+        for (auto const & p : factors)
         {
             n /= p.first;
             n *= (p.first-1);
@@ -140,7 +140,7 @@ namespace dmath
      * Return the greatest common divisor of a and b.
      */
     template <typename T>
-    T gcd(T a, T b)
+    T gcd(T const a, T const b)
     {
         return b == 0 ? a : gcd(b, a % b);
     }
@@ -151,11 +151,11 @@ namespace dmath
          * Compute the next value in the continued fraction of sqrt(d)
          * and update the current variables.
          */
-        size_t next_cfr(long & b, long & c, size_t d)
+        size_t next_cfr(long & b, long & c, size_t const d)
         {
-            size_t x = (c*std::sqrt(d) - b*c) / (d - b*b);
-            long cc = d - b*b;
-            long bb = -b*c - x*cc;
+            auto const x = static_cast<size_t>((c*std::sqrt(d) - b*c) / (d - b*b));
+            long const cc = d - b*b;
+            long const bb = -b*c - x*cc;
 
             auto g = gcd(c, gcd(bb, cc));
             if (g < 0)
@@ -176,7 +176,7 @@ namespace dmath
      * Throws std::runtime_error if d is the square of a natural number.
      */
     std::pair<std::vector<size_t>, size_t>
-    cfr(size_t d, size_t max_iter = 2000)
+    cfr(size_t const d, size_t const max_iter = 2000)
     {
         using namespace std;
 
@@ -188,23 +188,23 @@ namespace dmath
         set<tpl> s;
 
         // Initialization.
-        long b = -floor(sqrt(d));
+        long b = static_cast<size_t>(-floor(sqrt(d)));
         long c = 1;
         s.emplace(b, c);
         out.push_back(-b);
 
-        if ((size_t)b*b == d)
+        if (static_cast<size_t>(b*b) == d)
             throw runtime_error("cfr(): d must not be a square.");
 
         // Iteratively compute the values of the continued fraction.
         for (size_t i = 0; i < max_iter; ++i)
         {
             // Compute next value in the continued fraction.
-            auto x = detail::next_cfr(b, c, d);
+            auto const x = detail::next_cfr(b, c, d);
             out.push_back(x);
 
             // Check for periodicity.
-            auto p = s.emplace(b, c);
+            auto const p = s.emplace(b, c);
             if (!p.second)
                 return make_pair(out, distance(p.first, s.end()));
         }
@@ -217,7 +217,7 @@ namespace dmath
         /**
          * Get the i-th value of the given continued fraction.
          */
-        size_t eval_cfr(size_t i, std::vector<size_t> const & frac, size_t p)
+        size_t eval_cfr(size_t i, std::vector<size_t> const & frac, size_t const p)
         {
             if (i < frac.size())
                 return frac[i];
@@ -231,7 +231,7 @@ namespace dmath
     /**
      * Return (numerator, denominator) of the n-th approximation fraction of the given continued fraction.
      */
-    std::pair<size_t, size_t> approx_cfr(size_t n, std::vector<size_t> const & frac, size_t p)
+    Pair approx_cfr(size_t n, std::vector<size_t> const & frac, size_t const p)
     {
         using namespace std;
 
@@ -257,6 +257,55 @@ namespace dmath
         return make_pair(a/d, b/d);
     }
 
+    namespace detail
+    {
+        /**
+         * Given a Farey sequence of order n-1, compute the Farey sequence of order n.
+         */
+        void next_farey(std::vector<Pair> & current_farey, size_t const n)
+        {
+            // Find the new fractions that should be inserted into the Farey sequence.
+            std::vector<Pair> insertions;
+            for (size_t i = 0; i+1 < current_farey.size(); ++i)
+            {
+                auto const & left = current_farey[i];
+                auto const & right = current_farey[i+1];
+                if (left.second + right.second == n)
+                {
+                    insertions.emplace_back(left.first + right.first, n);
+                }
+            }
+
+            // Insert the new fractions keeping current_farey sorted.
+            auto comp = [](Pair const & a, Pair const & b)
+            {
+                return a.first * b.second < a.second * b.first;
+            };
+            for (auto const & p : insertions)
+            {
+                auto i = std::lower_bound(current_farey.begin(), current_farey.end(), p, comp);
+                current_farey.insert(i, p);
+            }
+        }
+    }
+
+    /**
+     * Compute the reduced fractions between 0 and 1 with a denominator less than or equal to n,
+     * arranged in order of increasing size.
+     * This is also called the Farey sequence of order n.
+     */
+    std::vector<Pair> farey(size_t const n)
+    {
+        if (n == 0)
+            throw std::runtime_error("Cannot compute Farey sequence of order zero.");
+
+        std::vector<Pair> sequence = {{0, 1}, {1, 1}};
+        for (size_t current = 1; current < n; ++current)
+        {
+            detail::next_farey(sequence, current+1);
+        }
+        return sequence;
+    }
 }
 
 #endif

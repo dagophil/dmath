@@ -1,7 +1,7 @@
 import os
 import unittest
 
-from dmath import is_prime, eratosthenes, prime_factors, euler_phi, gcd, cfr, approx_cfr
+from dmath import is_prime, eratosthenes, prime_factors, euler_phi, gcd, cfr, approx_cfr, farey
 
 
 class TestIsPrime(unittest.TestCase):
@@ -191,6 +191,28 @@ class TestApproxCfr(unittest.TestCase):
         for x in (-1, -5, -33):
             with self.assertRaises(OverflowError):
                 approx_cfr(3, d=x)
+
+
+class TestFarey(unittest.TestCase):
+
+    def test_farey_up_to_ten(self):
+        first_farey_sequences = {1: [(0, 1), (1, 1)],
+                                 2: [(0, 1), (1, 2), (1, 1)],
+                                 3: [(0, 1), (1, 3), (1, 2), (2, 3), (1, 1)],
+                                 4: [(0, 1), (1, 4), (1, 3), (1, 2), (2, 3), (3, 4), (1, 1)],
+                                 5: [(0, 1), (1, 5), (1, 4), (1, 3), (2, 5), (1, 2), (3, 5), (2, 3), (3, 4), (4, 5), (1, 1)],
+                                 6: [(0, 1), (1, 6), (1, 5), (1, 4), (1, 3), (2, 5), (1, 2), (3, 5), (2, 3), (3, 4), (4, 5), (5, 6), (1, 1)]}
+        for number, sequence in first_farey_sequences.items():
+            self.assertEqual(farey(number), sequence)
+
+    def test_farey_series_of_zero_raises_runtime_error(self):
+        with self.assertRaises(RuntimeError):
+            farey(0)
+
+    def test_farey_series_with_negative_input_raises_overflow_error(self):
+        for x in (-1, -5, -33):
+            with self.assertRaises(OverflowError):
+                farey(x)
 
 
 if __name__ == "__main__":
