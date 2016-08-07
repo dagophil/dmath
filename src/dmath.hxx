@@ -257,36 +257,24 @@ namespace dmath
         return make_pair(a/d, b/d);
     }
 
-    namespace detail
+    /**
+     * Compute the fractions that lie between the given fractions in a Farey sequence of order n.
+     * The given fractions must lie next to each other in a Farey sequence of order < n.
+     */
+    std::vector<Pair> restricted_farey(Pair const & left, Pair const & right, size_t const n)
     {
-        /**
-         * Given a Farey sequence of order n-1, compute the Farey sequence of order n.
-         */
-        void next_farey(std::vector<Pair> & current_farey, size_t const n)
-        {
-            // Find the new fractions that should be inserted into the Farey sequence.
-            std::vector<Pair> insertions;
-            for (size_t i = 0; i+1 < current_farey.size(); ++i)
-            {
-                auto const & left = current_farey[i];
-                auto const & right = current_farey[i+1];
-                if (left.second + right.second == n)
-                {
-                    insertions.emplace_back(left.first + right.first, n);
-                }
-            }
+        if (n == 0)
+            throw std::runtime_error("Cannot compute Farey sequence of order zero.");
 
-            // Insert the new fractions keeping current_farey sorted.
-            auto comp = [](Pair const & a, Pair const & b)
+        std::vector<Pair> sequence = {left, right};
+        for (size_t i = 0; i+1 < sequence.size(); ++i)
+        {
+            while (sequence[i].second + sequence[i+1].second <= n)
             {
-                return a.first * b.second < a.second * b.first;
-            };
-            for (auto const & p : insertions)
-            {
-                auto i = std::lower_bound(current_farey.begin(), current_farey.end(), p, comp);
-                current_farey.insert(i, p);
+                sequence.insert(sequence.begin()+i+1, {sequence[i].first+sequence[i+1].first, sequence[i].second+sequence[i+1].second});
             }
         }
+        return sequence;
     }
 
     /**
@@ -296,15 +284,7 @@ namespace dmath
      */
     std::vector<Pair> farey(size_t const n)
     {
-        if (n == 0)
-            throw std::runtime_error("Cannot compute Farey sequence of order zero.");
-
-        std::vector<Pair> sequence = {{0, 1}, {1, 1}};
-        for (size_t current = 1; current < n; ++current)
-        {
-            detail::next_farey(sequence, current+1);
-        }
-        return sequence;
+        return restricted_farey({0, 1}, {1, 1}, n);
     }
 }
 
