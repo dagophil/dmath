@@ -195,19 +195,22 @@ class TestApproxCfr(unittest.TestCase):
 
 class TestRestrictedFarey(unittest.TestCase):
 
-    def test_restricted_farey(self):
-        self.assertEqual(restricted_farey((1, 3), (1, 2), 8),
-                         [(1, 3), (3, 8), (2, 5), (3, 7), (1, 2)])
+    def test_restricted_farey_generator(self):
+        f = restricted_farey((1, 3), (1, 2), 8)
+        for x in ((1, 3), (3, 8), (2, 5), (3, 7), (1, 2)):
+            self.assertEqual(next(f), x)
+        with self.assertRaises(StopIteration):
+            next(f)
 
     def test_restricted_farey_of_zero_raises_runtime_error(self):
         with self.assertRaises(RuntimeError):
-            restricted_farey((1, 3), (1, 2), 0)
+            next(restricted_farey((1, 3), (1, 2), 0))
 
     def test_restricted_farey_with_unreduced_fractions_raises_runtime_error(self):
         with self.assertRaises(RuntimeError):
-            restricted_farey((2, 6), (1, 2), 8)
+            next(restricted_farey((2, 6), (1, 2), 8))
         with self.assertRaises(RuntimeError):
-            restricted_farey((1, 3), (2, 4), 8)
+            next(restricted_farey((1, 3), (2, 4), 8))
 
     def test_restricted_farey_with_negative_input_raises_overflow_error(self):
         for x in (-1, -5, -33):
@@ -225,6 +228,13 @@ class TestRestrictedFarey(unittest.TestCase):
 
 class TestFarey(unittest.TestCase):
 
+    def test_farey_generator(self):
+        f = farey(4)
+        for x in ((0, 1), (1, 4), (1, 3), (1, 2), (2, 3), (3, 4), (1, 1)):
+            self.assertEqual(next(f), x)
+        with self.assertRaises(StopIteration):
+            next(f)
+
     def test_farey_up_to_ten(self):
         first_farey_sequences = {1: [(0, 1), (1, 1)],
                                  2: [(0, 1), (1, 2), (1, 1)],
@@ -233,11 +243,11 @@ class TestFarey(unittest.TestCase):
                                  5: [(0, 1), (1, 5), (1, 4), (1, 3), (2, 5), (1, 2), (3, 5), (2, 3), (3, 4), (4, 5), (1, 1)],
                                  6: [(0, 1), (1, 6), (1, 5), (1, 4), (1, 3), (2, 5), (1, 2), (3, 5), (2, 3), (3, 4), (4, 5), (5, 6), (1, 1)]}
         for number, sequence in first_farey_sequences.items():
-            self.assertEqual(farey(number), sequence)
+            self.assertEqual(list(farey(number)), sequence)
 
     def test_farey_series_of_zero_raises_runtime_error(self):
         with self.assertRaises(RuntimeError):
-            farey(0)
+            next(farey(0))
 
     def test_farey_series_with_negative_input_raises_overflow_error(self):
         for x in (-1, -5, -33):

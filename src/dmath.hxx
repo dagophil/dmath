@@ -87,8 +87,8 @@ namespace dmath
     }
 
     /**
-     * Compute the prime factors of n.
-     * The output is a vector of pairs (p, e), where p is a prime that divides n and e is the maximum exponent such that p^e divides n.
+     * Compute the prime factors of n. The output is a vector of pairs (p, e), where p is a prime that divides n and e
+     * is the maximum exponent such that p^e divides n.
      * Throws std::runtime_error if input is zero.
      */
     std::vector<Pair> prime_factors(size_t n)
@@ -149,8 +149,7 @@ namespace dmath
     namespace detail
     {
         /**
-         * Compute the next value in the continued fraction of sqrt(d)
-         * and update the current variables.
+         * Compute the next value in the continued fraction of sqrt(d) and update the current variables.
          */
         size_t next_cfr(long & b, long & c, size_t const d)
         {
@@ -171,9 +170,8 @@ namespace dmath
     }
 
     /**
-     * Returns a pair (f, p) where f is the continued fraction of sqrt(d) and
-     * p is the period length. If p == 0 then the maximum number of iterations 
-     * was reached before finding the period length.
+     * Returns a pair (f, p) where f is the continued fraction of sqrt(d) and p is the period length. If p == 0 then
+     * the maximum number of iterations was reached before finding the period length.
      * Throws std::runtime_error if d is the square of a natural number.
      */
     std::pair<std::vector<size_t>, size_t>
@@ -258,14 +256,55 @@ namespace dmath
         return make_pair(a/d, b/d);
     }
 
+
+    namespace detail
+    {
+        /**
+         * Returns an empty std::stack<Pair>. This is needed for the cython wrappers of next_farey().
+         */
+        std::stack<Pair> create_farey_stack()
+        {
+            return std::stack<Pair>();
+        }
+    }
+
+    /**
+     * Compute the fraction in the Farey sequence of order n that lies next to the given fraction.
+     * If the new fraction is equal to stack.top(), it is removed from the stack.
+     * Otherwise, all fractions in the Farey sequence between the new fraction and stack.top() are pushed onto the
+     * stack.
+     * The whole Farey sequence of order n can be computed by iterating with this function. See farey().
+     */
+    Pair next_farey(Pair const & current, std::stack<Pair> & stack, size_t const n)
+    {
+        if (n == 0)
+            throw std::runtime_error("Cannot compute Farey sequence of order zero.");
+        if (stack.empty())
+            throw std::runtime_error("Tried to call next_farey() with empty stack.");
+
+        while (true)
+        {
+            auto r = stack.top();
+            auto const denominator = current.second + r.second;
+            if (denominator <= n)
+            {
+                auto const numerator = current.first + r.first;
+                stack.push({numerator, denominator});
+            }
+            else
+            {
+                stack.pop();
+                return r;
+            }
+        }
+    }
+
     /**
      * Compute the fractions that lie between the given fractions in a Farey sequence of order n.
      * The given fractions must lie next to each other in a Farey sequence of order < n.
      */
     std::vector<Pair> restricted_farey(Pair const & left, Pair const & right, size_t const n)
     {
-        if (n == 0)
-            throw std::runtime_error("Cannot compute Farey sequence of order zero.");
         if (left.first * right.second >= left.second * right.first)
             throw std::runtime_error("left must be less than right.");
         if (gcd(left.first, left.second) != 1 || gcd(right.first, right.second) != 1)
@@ -276,27 +315,14 @@ namespace dmath
         stack.push(right);
         while (!stack.empty())
         {
-            auto const & l = sequence.back();
-            auto const & r = stack.top();
-            auto const denominator = l.second + r.second;
-            if (denominator <= n)
-            {
-                auto const numerator = l.first + r.first;
-                stack.push({numerator, denominator});
-            }
-            else
-            {
-                sequence.push_back(r);
-                stack.pop();
-            }
+            sequence.emplace_back(next_farey(sequence.back(), stack, n));
         }
         return sequence;
     }
 
     /**
-     * Compute the reduced fractions between 0 and 1 with a denominator less than or equal to n,
-     * arranged in order of increasing size.
-     * This is also called the Farey sequence of order n.
+     * Compute the reduced fractions between 0 and 1 with a denominator less than or equal to n, arranged in order of
+     * increasing size. This is also called the Farey sequence of order n.
      */
     std::vector<Pair> farey(size_t const n)
     {
