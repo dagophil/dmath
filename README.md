@@ -8,8 +8,8 @@
 
 ## Compile
 
-To compile the library, python and cython need to be installed. The test environment uses python 3.5.2 and cython
-0.24.1, but older versions (even python 2.7) should work as well.
+To compile the library, python and cython need to be installed. The supported python versions are 2.7 and 3.5, the
+supported cython version is 0.24. Other versions might work as well.
 
 The library can be compiled by running the following command from the *dmath* directory.
 ```
