@@ -1,7 +1,7 @@
 import os
 import unittest
 
-from dmath import is_prime, prime_factors, eratosthenes, cfr, approx_cfr
+from dmath import is_prime, eratosthenes, prime_factors, euler_phi, cfr, approx_cfr
 
 
 class TestIsPrime(unittest.TestCase):
@@ -28,6 +28,36 @@ class TestIsPrime(unittest.TestCase):
         for x in (-1, -5, -33):
             with self.assertRaises(OverflowError):
                 is_prime(x)
+
+
+class TestEratosthenes(unittest.TestCase):
+
+    def test_eratosthenes_up_to_ten(self):
+        primes = {0: [],
+                  1: [],
+                  2: [2],
+                  3: [2, 3],
+                  4: [2, 3],
+                  5: [2, 3, 5],
+                  6: [2, 3, 5],
+                  7: [2, 3, 5, 7],
+                  8: [2, 3, 5, 7],
+                  9: [2, 3, 5, 7],
+                  10: [2, 3, 5, 7]}
+        for number, primes_until_number in primes.items():
+            self.assertEqual(eratosthenes(number), primes_until_number)
+
+    def test_eratosthenes_for_primes_until_one_million(self):
+        current_dir = os.path.dirname(__file__)
+        filename = os.path.join(current_dir, "prime_list.txt")
+        with open(filename, "r") as f:
+            prime_list = [int(line.strip()) for line in f]
+        self.assertEqual(eratosthenes(1000000), prime_list)
+
+    def test_eratosthenes_with_negative_input_raises_overflow_error(self):
+        for x in (-1, -5, -33):
+            with self.assertRaises(OverflowError):
+                eratosthenes(x)
 
 
 class TestPrimeFactors(unittest.TestCase):
@@ -63,34 +93,33 @@ class TestPrimeFactors(unittest.TestCase):
                 prime_factors(x)
 
 
-class TestEratosthenes(unittest.TestCase):
+class TestEulerPhi(unittest.TestCase):
 
-    def test_eratosthenes_up_to_ten(self):
-        primes = {0: [],
-                  1: [],
-                  2: [2],
-                  3: [2, 3],
-                  4: [2, 3],
-                  5: [2, 3, 5],
-                  6: [2, 3, 5],
-                  7: [2, 3, 5, 7],
-                  8: [2, 3, 5, 7],
-                  9: [2, 3, 5, 7],
-                  10: [2, 3, 5, 7]}
-        for number, primes_until_number in primes.items():
-            self.assertEqual(eratosthenes(number), primes_until_number)
+    def test_euler_phi_of_first_ten_numbers(self):
+        first_ten_phis = {0: 0,
+                          1: 1,
+                          2: 1,
+                          3: 2,
+                          4: 2,
+                          5: 4,
+                          6: 2,
+                          7: 6,
+                          8: 4,
+                          9: 6}
+        for number, phi in first_ten_phis.items():
+            self.assertEqual(euler_phi(number), phi)
 
-    def test_eratosthenes_for_primes_until_one_million(self):
-        current_dir = os.path.dirname(__file__)
-        filename = os.path.join(current_dir, "prime_list.txt")
-        with open(filename, "r") as f:
-            prime_list = [int(line.strip()) for line in f]
-        self.assertEqual(eratosthenes(1000000), prime_list)
+    def test_euler_phi_of_selected_numbers(self):
+        selected_phis = {60: 16,
+                         5400: 1440,
+                         1139269212: 341877888}
+        for number, phi in selected_phis.items():
+            self.assertEqual(euler_phi(number), phi)
 
-    def test_eratosthenes_with_negative_input_raises_overflow_error(self):
+    def test_euler_phi_with_negative_input_raises_overflow_error(self):
         for x in (-1, -5, -33):
             with self.assertRaises(OverflowError):
-                eratosthenes(x)
+                euler_phi(x)
 
 
 class TestCrf(unittest.TestCase):

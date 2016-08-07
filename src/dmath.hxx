@@ -17,6 +17,23 @@ namespace dmath
     typedef std::pair<size_t, size_t> Pair;
 
     /**
+     * Returns true if n is prime, else false.
+     */
+    bool is_prime(size_t n)
+    {
+        if (n <= 1)
+            return false;
+        if (n <= 3)
+            return true;
+        if (n % 2 == 0 || n % 3 == 0)
+            return false;
+        for (size_t i = 5; i*i <= n; i+=6)
+            if (n % i == 0 || n % (i+2) == 0)
+                return false;
+        return true;
+    }
+
+    /**
      * Compute the prime numbers in the interval [2, N] and return them.
      */
     std::vector<size_t> eratosthenes(size_t N)
@@ -70,8 +87,7 @@ namespace dmath
 
     /**
      * Compute the prime factors of n.
-     * The output is a vector of pairs (p, e), where p is a prime that divides n
-     * and e is the maximum exponent such that p^e divides n.
+     * The output is a vector of pairs (p, e), where p is a prime that divides n and e is the maximum exponent such that p^e divides n.
      * Throws std::runtime_error if input is zero.
      */
     std::vector<Pair> prime_factors(size_t n)
@@ -102,20 +118,22 @@ namespace dmath
     }
 
     /**
-     * Returns true if n is prime, else false.
+     * Compute Euler's totient function for the given number n.
+     * Returns the number of positive integers up to n that are relatively prime to n.
      */
-    bool is_prime(size_t n)
+    size_t euler_phi(size_t n)
     {
-        if (n <= 1)
-            return false;
-        if (n <= 3)
-            return true;
-        if (n % 2 == 0 || n % 3 == 0)
-            return false;
-        for (size_t i = 5; i*i <= n; i+=6)
-            if (n % i == 0 || n % (i+2) == 0)
-                return false;
-        return true;
+        if (n == 0)
+            return 0;
+        if (n == 1)
+            return 1;
+        const auto factors = prime_factors(n);
+        for (const auto& p : factors)
+        {
+            n /= p.first;
+            n *= (p.first-1);
+        }
+        return n;
     }
 
     /**
