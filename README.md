@@ -66,6 +66,13 @@ Compute the value of Euler's totient function of the given number:
 341877888
 ```
 
+Compute the greates common divisor of the given numbers:
+```
+>>> import dmath
+>>> dmath.gcd(12, 18)
+6
+```
+
 Compute the continued fraction of the square root of the given number:
 ```
 >>> import dmath

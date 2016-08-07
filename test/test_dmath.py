@@ -1,7 +1,7 @@
 import os
 import unittest
 
-from dmath import is_prime, eratosthenes, prime_factors, euler_phi, cfr, approx_cfr
+from dmath import is_prime, eratosthenes, prime_factors, euler_phi, gcd, cfr, approx_cfr
 
 
 class TestIsPrime(unittest.TestCase):
@@ -120,6 +120,36 @@ class TestEulerPhi(unittest.TestCase):
         for x in (-1, -5, -33):
             with self.assertRaises(OverflowError):
                 euler_phi(x)
+
+
+class TestGcd(unittest.TestCase):
+
+    def test_gcd_of_first_ten_pairs(self):
+        first_ten_pairs = {(1, 1): 1, (1, 2): 1, (1, 3): 1, (1, 4): 1, (1, 5): 1, (1, 6): 1, (1, 7): 1, (1, 8): 1, (1, 9): 1, (1, 10): 1,
+                           (2, 2): 2, (2, 3): 1, (2, 4): 2, (2, 5): 1, (2, 6): 2, (2, 7): 1, (2, 8): 2, (2, 9): 1, (2, 10): 2,
+                           (3, 3): 3, (3, 4): 1, (3, 5): 1, (3, 6): 3, (3, 7): 1, (3, 8): 1, (3, 9): 3, (3, 10): 1,
+                           (4, 4): 4, (4, 5): 1, (4, 6): 2, (4, 7): 1, (4, 8): 4, (4, 9): 1, (4, 10): 2,
+                           (5, 5): 5, (5, 6): 1, (5, 7): 1, (5, 8): 1, (5, 9): 1, (5, 10): 5,
+                           (6, 6): 6, (6, 7): 1, (6, 8): 2, (6, 9): 3, (6, 10): 2,
+                           (7, 7): 7, (7, 8): 1, (7, 9): 1, (7, 10): 1,
+                           (8, 8): 8, (8, 9): 1, (8, 10): 2,
+                           (9, 9): 9, (9, 10): 1,
+                           (10, 10): 10}
+        for pair, pair_gcd in first_ten_pairs.items():
+            self.assertEqual(gcd(*pair), pair_gcd)
+
+    def test_gcd_with_zeros(self):
+        self.assertEqual(gcd(0, 0), 0)
+        for x in range(1, 10):
+            self.assertEqual(gcd(0, x), x)
+            self.assertEqual(gcd(x, 0), x)
+
+    def test_gcd_with_negative_input_raises_overflow_error(self):
+        for x in (-1, -5, -33):
+            with self.assertRaises(OverflowError):
+                gcd(x, 1)
+            with self.assertRaises(OverflowError):
+                gcd(1, x)
 
 
 class TestCrf(unittest.TestCase):

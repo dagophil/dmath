@@ -9,6 +9,7 @@ cdef extern from "dmath.hxx":
     cdef vector[size_t] _cpp_eratosthenes "dmath::eratosthenes" (size_t)
     cdef vector[pair[size_t, size_t]] _cpp_prime_factors "dmath::prime_factors" (size_t) except +
     cdef size_t _cpp_euler_phi "dmath::euler_phi" (size_t)
+    cdef size_t _cpp_gcd "dmath::gcd" (size_t, size_t)
     cdef pair[vector[size_t], size_t] _cpp_cfr "dmath::cfr" (size_t) except +
     cdef pair[vector[size_t], size_t] _cpp_cfr "dmath::cfr" (size_t, size_t) except +
     cdef pair[size_t, size_t] _cpp_approx_cfr "dmath::approx_cfr" (size_t, vector[size_t], size_t)
@@ -24,6 +25,9 @@ def prime_factors(size_t n):
 
 def euler_phi(size_t n):
     return _cpp_euler_phi(n)
+
+def gcd(size_t a, size_t b):
+    return _cpp_gcd(a, b)
 
 def cfr(size_t d, max_iter=None):
     if max_iter is None:
