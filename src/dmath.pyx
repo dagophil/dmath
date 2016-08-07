@@ -13,6 +13,7 @@ cdef extern from "dmath.hxx":
     cdef pair[vector[size_t], size_t] _cpp_cfr "dmath::cfr" (size_t) except +
     cdef pair[vector[size_t], size_t] _cpp_cfr "dmath::cfr" (size_t, size_t) except +
     cdef pair[size_t, size_t] _cpp_approx_cfr "dmath::approx_cfr" (size_t, vector[size_t], size_t)
+    cdef vector[pair[size_t, size_t]] _cpp_restricted_farey "dmath::restricted_farey" (pair[size_t, size_t], pair[size_t, size_t], size_t) except +
     cdef vector[pair[size_t, size_t]] _cpp_farey "dmath::farey" (size_t) except +
 
 def is_prime(size_t n):
@@ -46,6 +47,9 @@ def approx_cfr(size_t n, d=None, cfrac=None, max_iter=None):
         return _cpp_approx_cfr(n, cfrac[0], cfrac[1])
     else:
         raise RuntimeError("approx_cfr(): You must pass either d or cfrac.")
+
+def restricted_farey(pair[size_t, size_t] left, pair[size_t, size_t] right, size_t n):
+    return _cpp_restricted_farey(left, right, n)
 
 def farey(size_t n):
     return _cpp_farey(n)

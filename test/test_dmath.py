@@ -1,7 +1,7 @@
 import os
 import unittest
 
-from dmath import is_prime, eratosthenes, prime_factors, euler_phi, gcd, cfr, approx_cfr, farey
+from dmath import is_prime, eratosthenes, prime_factors, euler_phi, gcd, cfr, approx_cfr, restricted_farey, farey
 
 
 class TestIsPrime(unittest.TestCase):
@@ -191,6 +191,36 @@ class TestApproxCfr(unittest.TestCase):
         for x in (-1, -5, -33):
             with self.assertRaises(OverflowError):
                 approx_cfr(3, d=x)
+
+
+class TestRestrictedFarey(unittest.TestCase):
+
+    def test_restricted_farey(self):
+        self.assertEqual(restricted_farey((1, 3), (1, 2), 8),
+                         [(1, 3), (3, 8), (2, 5), (3, 7), (1, 2)])
+
+    def test_restricted_farey_of_zero_raises_runtime_error(self):
+        with self.assertRaises(RuntimeError):
+            restricted_farey((1, 3), (1, 2), 0)
+
+    def test_restricted_farey_with_unreduced_fractions_raises_runtime_error(self):
+        with self.assertRaises(RuntimeError):
+            restricted_farey((2, 6), (1, 2), 8)
+        with self.assertRaises(RuntimeError):
+            restricted_farey((1, 3), (2, 4), 8)
+
+    def test_restricted_farey_with_negative_input_raises_overflow_error(self):
+        for x in (-1, -5, -33):
+            with self.assertRaises(OverflowError):
+                restricted_farey((x, 3), (1, 2), 8)
+            with self.assertRaises(OverflowError):
+                restricted_farey((1, x), (1, 2), 8)
+            with self.assertRaises(OverflowError):
+                restricted_farey((1, 3), (x, 2), 8)
+            with self.assertRaises(OverflowError):
+                restricted_farey((1, 3), (1, x), 8)
+            with self.assertRaises(OverflowError):
+                restricted_farey((1, 3), (1, 2), x)
 
 
 class TestFarey(unittest.TestCase):
