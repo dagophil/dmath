@@ -266,6 +266,10 @@ namespace dmath
     {
         if (n == 0)
             throw std::runtime_error("Cannot compute Farey sequence of order zero.");
+        if (left.first * right.second >= left.second * right.first)
+            throw std::runtime_error("left must be less than right.");
+        if (gcd(left.first, left.second) != 1 || gcd(right.first, right.second) != 1)
+            throw std::runtime_error("The given fractions must be reduced (gcd(numerator, denominator) == 1).");
 
         std::vector<Pair> sequence = {left};
         std::stack<Pair> stack;
