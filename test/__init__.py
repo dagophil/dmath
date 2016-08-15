@@ -1,5 +1,5 @@
-from .test_dmath import TestApproxCfr, TestCrf, TestEratosthenes, TestEulerPhi, TestFarey, TestGcd, TestIsPrime,\
-    TestPrimeFactors, TestRestrictedFarey
+from .test_dmath import TestApproxCfr, TestCrf, TestEratosthenes, TestEulerPhi, TestFarey, TestGcd, TestIsPrime, \
+    TestNumberOfSummations, TestPrimeFactors, TestRestrictedFarey
 
 
 def load_tests(loader, tests, pattern):
