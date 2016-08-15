@@ -17,6 +17,7 @@ cdef extern from "dmath.hxx":
     cdef pair[size_t, size_t] _cpp_approx_cfr "dmath::approx_cfr" (size_t, vector[size_t], size_t)
     cdef stack[pair[size_t, size_t]] _cpp_create_farey_stack "dmath::detail::create_farey_stack" ()
     cdef pair[size_t, size_t] _cpp_next_farey "dmath::next_farey" (pair[size_t, size_t], stack[pair[size_t, size_t]], size_t) except +
+    cdef vector[size_t] _cpp_number_of_summations "dmath::number_of_summations" (vector[size_t], size_t)
 
 
 def is_prime(size_t n):
@@ -75,3 +76,6 @@ def restricted_farey(pair[size_t, size_t] left, pair[size_t, size_t] right, size
 
 def farey(size_t n):
     return restricted_farey(pair[size_t, size_t]((0, 1)), pair[size_t, size_t]((1, 1)), n)
+
+def number_of_summations(vector[size_t] candidates, size_t n):
+    return _cpp_number_of_summations(candidates, n)

@@ -328,6 +328,26 @@ namespace dmath
     {
         return restricted_farey({0, 1}, {1, 1}, n);
     }
+
+    /**
+     * Counts the number of possibilities to write x as a sum of the numbers in candidates for each x in [0, n].
+     */
+    std::vector<size_t> number_of_summations(std::vector<size_t> const & candidates, size_t const n)
+    {
+        std::set<size_t> ordered_candidates(candidates.begin(), candidates.end());
+        ordered_candidates.erase(0);
+
+        std::vector<size_t> summations(n+1, 0);
+        summations[0] = 1;
+        for (auto const c : ordered_candidates)
+        {
+            if (c > n)
+                break;
+            for (size_t i = c; i <= n; ++i)
+                summations[i] += summations[i-c];
+        }
+        return summations;
+    }
 }
 
 #endif

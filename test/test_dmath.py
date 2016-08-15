@@ -1,7 +1,8 @@
 import os
 import unittest
 
-from dmath import is_prime, eratosthenes, prime_factors, euler_phi, gcd, cfr, approx_cfr, restricted_farey, farey
+from dmath import is_prime, eratosthenes, prime_factors, euler_phi, gcd, cfr, approx_cfr, restricted_farey, farey, \
+    number_of_summations
 
 
 class TestIsPrime(unittest.TestCase):
@@ -253,6 +254,23 @@ class TestFarey(unittest.TestCase):
         for x in (-1, -5, -33):
             with self.assertRaises(OverflowError):
                 farey(x)
+
+
+class TestNumberOfSummations(unittest.TestCase):
+
+    def test_number_of_summations_with_examples(self):
+        self.assertEqual(number_of_summations(range(11), 10), [1, 1, 2, 3, 5, 7, 11, 15, 22, 30, 42])
+        self.assertEqual(number_of_summations([1, 2, 5, 10], 10), [1, 1, 2, 2, 3, 4, 5, 6, 7, 8, 11])
+
+    def test_number_of_summations_with_empty_candidates(self):
+        self.assertEqual(number_of_summations([], 5), [1, 0, 0, 0, 0, 0])
+
+    def test_number_of_summations_with_negative_input_raises_overflow_error(self):
+        for x in (-1, -5, -33):
+            with self.assertRaises(OverflowError):
+                number_of_summations([1, 2, 3], x)
+            with self.assertRaises(OverflowError):
+                number_of_summations([1, x, 3], 5)
 
 
 if __name__ == "__main__":
