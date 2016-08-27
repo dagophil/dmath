@@ -1,12 +1,14 @@
 # distutils: language=c++
+# distutils: sources=[src/cpp/primes.cpp, src/cpp/cfr.cpp, src/cpp/farey.cpp, src/cpp/dijkstra.cpp]
 
+from libcpp.map cimport map
 from libcpp.pair cimport pair
 from libcpp.stack cimport stack
 from libcpp.vector cimport vector
 from libcpp cimport bool
 
 
-cdef extern from "dmath.hxx":
+cdef extern from "cpp/dmath.hxx":
     cdef bool _cpp_is_prime "dmath::is_prime" (size_t)
     cdef vector[size_t] _cpp_eratosthenes "dmath::eratosthenes" (size_t)
     cdef vector[pair[size_t, size_t]] _cpp_prime_factors "dmath::prime_factors" (size_t) except +
@@ -15,9 +17,15 @@ cdef extern from "dmath.hxx":
     cdef pair[vector[size_t], size_t] _cpp_cfr "dmath::cfr" (size_t) except +
     cdef pair[vector[size_t], size_t] _cpp_cfr "dmath::cfr" (size_t, size_t) except +
     cdef pair[size_t, size_t] _cpp_approx_cfr "dmath::approx_cfr" (size_t, vector[size_t], size_t)
-    cdef stack[pair[size_t, size_t]] _cpp_create_farey_stack "dmath::detail::create_farey_stack" ()
+    cdef stack[pair[size_t, size_t]] _cpp_create_farey_stack "dmath::create_farey_stack" ()
     cdef pair[size_t, size_t] _cpp_next_farey "dmath::next_farey" (pair[size_t, size_t], stack[pair[size_t, size_t]], size_t) except +
     cdef vector[size_t] _cpp_number_of_summations "dmath::number_of_summations" (vector[size_t], size_t)
+
+    cdef cppclass _cpp_Dijkstra "dmath::Dijkstra":
+        _cpp_Dijkstra(map[pair[size_t, size_t], double]) except +
+        void run(size_t)
+        map[size_t, double] get_distances()
+        map[size_t, size_t] get_predecessors()
 
 
 def is_prime(size_t n):
@@ -77,5 +85,25 @@ def restricted_farey(pair[size_t, size_t] left, pair[size_t, size_t] right, size
 def farey(size_t n):
     return restricted_farey(pair[size_t, size_t]((0, 1)), pair[size_t, size_t]((1, 1)), n)
 
+
 def number_of_summations(vector[size_t] candidates, size_t n):
     return _cpp_number_of_summations(candidates, n)
+
+
+cdef class Dijkstra:
+    cdef _cpp_Dijkstra* dijkstra
+
+    def __cinit__(self, map[pair[size_t, size_t], double] edge_weights):
+        self.dijkstra = new _cpp_Dijkstra(edge_weights)
+
+    def __dealloc__(self):
+        del self.dijkstra
+
+    def run(self, size_t source):
+        self.dijkstra.run(source)
+
+    def get_predecessors(self):
+        return self.dijkstra.get_predecessors()
+
+    def get_distances(self):
+        return self.dijkstra.get_distances()

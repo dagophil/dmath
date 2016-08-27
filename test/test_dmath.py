@@ -2,7 +2,19 @@ import os
 import unittest
 
 from dmath import is_prime, eratosthenes, prime_factors, euler_phi, gcd, cfr, approx_cfr, restricted_farey, farey, \
-    number_of_summations
+    number_of_summations, Dijkstra
+
+
+def assertDictAlmostEqual(test_case, d0, d1):
+    assert isinstance(test_case, unittest.TestCase)
+    assert isinstance(d0, dict)
+    assert isinstance(d1, dict)
+    test_case.assertEqual(d0.keys(), d1.keys())
+    for k, v in d0.items():
+        test_case.assertAlmostEqual(v, d1[k])
+
+
+unittest.TestCase.assertDictAlmostEqual = assertDictAlmostEqual
 
 
 class TestIsPrime(unittest.TestCase):
@@ -271,6 +283,30 @@ class TestNumberOfSummations(unittest.TestCase):
                 number_of_summations([1, 2, 3], x)
             with self.assertRaises(OverflowError):
                 number_of_summations([1, x, 3], 5)
+
+
+class TestDijsktra(unittest.TestCase):
+
+    def test_dijkstra_example(self):
+        edge_weights = {
+            (1, 2): 7,
+            (1, 3): 9,
+            (1, 6): 14,
+            (2, 3): 10,
+            (2, 4): 15,
+            (3, 4): 11,
+            (3, 6): 2,
+            (4, 5): 6,
+            (5, 6): 9
+        }
+        inverted_edge_weights = {(b, a): c for (a, b), c in edge_weights.items()}
+        edge_weights.update(inverted_edge_weights)
+
+        dijkstra = Dijkstra(edge_weights)
+
+        dijkstra.run(1)
+        self.assertEqual(dijkstra.get_predecessors(), {2: 1, 3: 1, 4: 3, 5: 6, 6: 3})
+        self.assertDictAlmostEqual(dijkstra.get_distances(), {1: 0, 2: 7, 3: 9, 4: 20, 5: 20, 6: 11})
 
 
 if __name__ == "__main__":
