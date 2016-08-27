@@ -20,8 +20,9 @@ namespace dmath
     /**
      * Returns true if n is prime, else false.
      */
-    bool is_prime(size_t const n)
-    {
+    bool is_prime(
+            size_t const n
+    ){
         if (n <= 1)
             return false;
         if (n <= 3)
@@ -37,8 +38,9 @@ namespace dmath
     /**
      * Compute the prime numbers in the interval [2, N] and return them.
      */
-    std::vector<size_t> eratosthenes(size_t const N)
-    {
+    std::vector<size_t> eratosthenes(
+            size_t const N
+    ){
     	std::vector<bool> marked(N+1);
     	marked[0] = true;
     	marked[1] = true;
@@ -71,8 +73,11 @@ namespace dmath
          * Finds the largest exponent e such that n is divisible by i^e.
          * n will be divided by i^e. If e > 0 then (i, e) will be appended to factors.
          */
-        void div(std::vector<Pair> & factors, size_t & n, size_t const i)
-        {
+        void div(
+                std::vector<Pair> & factors,
+                size_t & n,
+                size_t const i
+        ){
             if (n % i == 0)
             {
                 factors.emplace_back(i, 1);
@@ -91,8 +96,9 @@ namespace dmath
      * is the maximum exponent such that p^e divides n.
      * Throws std::runtime_error if input is zero.
      */
-    std::vector<Pair> prime_factors(size_t n)
-    {
+    std::vector<Pair> prime_factors(
+            size_t n
+    ){
         if (n == 0)
             throw std::runtime_error("Cannot compute prime factors of zero.");
 
@@ -122,8 +128,9 @@ namespace dmath
      * Compute Euler's totient function for the given number n.
      * Returns the number of positive integers up to n that are relatively prime to n.
      */
-    size_t euler_phi(size_t n)
-    {
+    size_t euler_phi(
+            size_t n
+    ){
         if (n == 0)
             return 0;
         if (n == 1)
@@ -141,8 +148,10 @@ namespace dmath
      * Return the greatest common divisor of a and b.
      */
     template <typename T>
-    T gcd(T const a, T const b)
-    {
+    T gcd(
+            T const a,
+            T const b
+    ){
         return b == 0 ? a : gcd(b, a % b);
     }
 
@@ -151,8 +160,11 @@ namespace dmath
         /**
          * Compute the next value in the continued fraction of sqrt(d) and update the current variables.
          */
-        size_t next_cfr(long & b, long & c, size_t const d)
-        {
+        size_t next_cfr(
+                long & b,
+                long & c,
+                size_t const d
+        ){
             auto const x = static_cast<size_t>((c*std::sqrt(d) - b*c) / (d - b*b));
             long const cc = d - b*b;
             long const bb = -b*c - x*cc;
@@ -175,8 +187,10 @@ namespace dmath
      * Throws std::runtime_error if d is the square of a natural number.
      */
     std::pair<std::vector<size_t>, size_t>
-    cfr(size_t const d, size_t const max_iter = 2000)
-    {
+    cfr(
+            size_t const d,
+            size_t const max_iter = 2000
+    ){
         using namespace std;
 
         // The container for the continued fraction.
@@ -216,8 +230,11 @@ namespace dmath
         /**
          * Get the i-th value of the given continued fraction.
          */
-        size_t eval_cfr(size_t i, std::vector<size_t> const & frac, size_t const p)
-        {
+        size_t eval_cfr(
+                size_t i,
+                std::vector<size_t> const & frac,
+                size_t const p
+        ){
             if (i < frac.size())
                 return frac[i];
             else if (p > 0)
@@ -230,8 +247,11 @@ namespace dmath
     /**
      * Return (numerator, denominator) of the n-th approximation fraction of the given continued fraction.
      */
-    Pair approx_cfr(size_t n, std::vector<size_t> const & frac, size_t const p)
-    {
+    Pair approx_cfr(
+            size_t n,
+            std::vector<size_t> const & frac,
+            size_t const p
+    ){
         using namespace std;
 
         // Initialization.
@@ -275,8 +295,11 @@ namespace dmath
      * stack.
      * The whole Farey sequence of order n can be computed by iterating with this function. See farey().
      */
-    Pair next_farey(Pair const & current, std::stack<Pair> & stack, size_t const n)
-    {
+    Pair next_farey(
+            Pair const & current,
+            std::stack<Pair> & stack,
+            size_t const n
+    ){
         if (n == 0)
             throw std::runtime_error("Cannot compute Farey sequence of order zero.");
         if (stack.empty())
@@ -303,8 +326,11 @@ namespace dmath
      * Compute the fractions that lie between the given fractions in a Farey sequence of order n.
      * The given fractions must lie next to each other in a Farey sequence of order < n.
      */
-    std::vector<Pair> restricted_farey(Pair const & left, Pair const & right, size_t const n)
-    {
+    std::vector<Pair> restricted_farey(
+            Pair const & left,
+            Pair const & right,
+            size_t const n
+    ){
         if (left.first * right.second >= left.second * right.first)
             throw std::runtime_error("left must be less than right.");
         if (gcd(left.first, left.second) != 1 || gcd(right.first, right.second) != 1)
@@ -324,16 +350,19 @@ namespace dmath
      * Compute the reduced fractions between 0 and 1 with a denominator less than or equal to n, arranged in order of
      * increasing size. This is also called the Farey sequence of order n.
      */
-    std::vector<Pair> farey(size_t const n)
-    {
+    std::vector<Pair> farey(
+            size_t const n
+    ){
         return restricted_farey({0, 1}, {1, 1}, n);
     }
 
     /**
      * Counts the number of possibilities to write x as a sum of the numbers in candidates for each x in [0, n].
      */
-    std::vector<size_t> number_of_summations(std::vector<size_t> const & candidates, size_t const n)
-    {
+    std::vector<size_t> number_of_summations(
+            std::vector<size_t> const & candidates,
+            size_t const n
+    ){
         std::set<size_t> ordered_candidates(candidates.begin(), candidates.end());
         ordered_candidates.erase(0);
 
