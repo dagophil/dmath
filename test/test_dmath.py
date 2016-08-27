@@ -302,11 +302,20 @@ class TestDijsktra(unittest.TestCase):
         inverted_edge_weights = {(b, a): c for (a, b), c in edge_weights.items()}
         edge_weights.update(inverted_edge_weights)
 
-        dijkstra = Dijkstra(edge_weights)
+        dijkstra_results = {
+            1: ({2: 1, 3: 1, 4: 3, 5: 6, 6: 3}, {1: 0, 2: 7, 3: 9, 4: 20, 5: 20, 6: 11}),
+            2: ({1: 2, 3: 2, 4: 2, 5: 6, 6: 3}, {1: 7, 2: 0, 3: 10, 4: 15, 5: 21, 6: 12}),
+            3: ({1: 3, 2: 3, 4: 3, 5: 6, 6: 3}, {1: 9, 2: 10, 3: 0, 4: 11, 5: 11, 6: 2}),
+            4: ({1: 3, 2: 4, 3: 4, 5: 4, 6: 3}, {1: 20, 2: 15, 3: 11, 4: 0, 5: 6, 6: 13}),
+            5: ({1: 3, 2: 4, 3: 6, 4: 5, 6: 5}, {1: 20, 2: 21, 3: 11, 4: 6, 5: 0, 6: 9}),
+            6: ({1: 3, 2: 3, 3: 6, 4: 3, 5: 6}, {1: 11, 2: 12, 3: 2, 4: 13, 5: 9, 6: 0})
+        }
 
-        dijkstra.run(1)
-        self.assertEqual(dijkstra.get_predecessors(), {2: 1, 3: 1, 4: 3, 5: 6, 6: 3})
-        self.assertDictAlmostEqual(dijkstra.get_distances(), {1: 0, 2: 7, 3: 9, 4: 20, 5: 20, 6: 11})
+        dijkstra = Dijkstra(edge_weights)
+        for source, (predecessors, distances) in dijkstra_results.items():
+            dijkstra.run(source)
+            self.assertEqual(dijkstra.get_predecessors(), predecessors)
+            self.assertDictAlmostEqual(dijkstra.get_distances(), distances)
 
 
 if __name__ == "__main__":
