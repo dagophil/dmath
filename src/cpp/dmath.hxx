@@ -49,10 +49,7 @@ namespace dmath
     T gcd(
             T const a,
             T const b
-    ){
-        return b == 0 ? a : gcd(b, a % b);
-    }
-    // TODO: Move gcd function.
+    );
 
     /**
      * Returns a pair (f, p) where f is the continued fraction of sqrt(d) and p is the period length. If p == 0 then
@@ -184,6 +181,18 @@ namespace dmath
         std::map<size_t, WeightType> distance;
         std::map<size_t, size_t> predecessor;
     };
+
+    ///////////////////////////////////////////////
+    //   Implementation of templated functions   //
+    ///////////////////////////////////////////////
+
+    template <typename T>
+    T gcd(
+            T const a,
+            T const b
+    ){
+        return b == 0 ? a : gcd(b, a % b);
+    }
 
 } // namespace dmath
 
