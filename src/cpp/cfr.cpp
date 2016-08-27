@@ -1,5 +1,7 @@
 #include "dmath.hxx"
 
+#include <cmath>
+
 namespace dmath
 {
     namespace detail
