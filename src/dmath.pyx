@@ -24,6 +24,7 @@ cdef extern from "cpp/dmath.hxx":
     cdef cppclass _cpp_Dijkstra "dmath::Dijkstra":
         _cpp_Dijkstra(map[pair[size_t, size_t], double]) except +
         void run(size_t)
+        vector[size_t] path_to(size_t) except +
         map[size_t, double] get_distances()
         map[size_t, size_t] get_predecessors()
 
@@ -101,6 +102,9 @@ cdef class Dijkstra:
 
     def run(self, size_t source):
         self.dijkstra.run(source)
+
+    def path_to(self, size_t target):
+        return self.dijkstra.path_to(target)
 
     def get_predecessors(self):
         return self.dijkstra.get_predecessors()

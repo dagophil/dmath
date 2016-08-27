@@ -287,36 +287,76 @@ class TestNumberOfSummations(unittest.TestCase):
 
 class TestDijsktra(unittest.TestCase):
 
-    def test_dijkstra_example(self):
-        edge_weights = {
-            (1, 2): 7,
-            (1, 3): 9,
-            (1, 6): 14,
-            (2, 3): 10,
-            (2, 4): 15,
-            (3, 4): 11,
-            (3, 6): 2,
-            (4, 5): 6,
-            (5, 6): 9
-        }
-        inverted_edge_weights = {(b, a): c for (a, b), c in edge_weights.items()}
-        edge_weights.update(inverted_edge_weights)
+    nodes = [1, 2, 3, 4, 5, 6]
 
-        dijkstra_results = {
-            1: ({2: 1, 3: 1, 4: 3, 5: 6, 6: 3}, {1: 0, 2: 7, 3: 9, 4: 20, 5: 20, 6: 11}),
-            2: ({1: 2, 3: 2, 4: 2, 5: 6, 6: 3}, {1: 7, 2: 0, 3: 10, 4: 15, 5: 21, 6: 12}),
-            3: ({1: 3, 2: 3, 4: 3, 5: 6, 6: 3}, {1: 9, 2: 10, 3: 0, 4: 11, 5: 11, 6: 2}),
-            4: ({1: 3, 2: 4, 3: 4, 5: 4, 6: 3}, {1: 20, 2: 15, 3: 11, 4: 0, 5: 6, 6: 13}),
-            5: ({1: 3, 2: 4, 3: 6, 4: 5, 6: 5}, {1: 20, 2: 21, 3: 11, 4: 6, 5: 0, 6: 9}),
-            6: ({1: 3, 2: 3, 3: 6, 4: 3, 5: 6}, {1: 11, 2: 12, 3: 2, 4: 13, 5: 9, 6: 0})
-        }
+    edge_weights = {
+        (1, 2): 7,
+        (1, 3): 9,
+        (1, 6): 14,
+        (2, 3): 10,
+        (2, 4): 15,
+        (3, 4): 11,
+        (3, 6): 2,
+        (4, 5): 6,
+        (5, 6): 9
+    }
 
-        dijkstra = Dijkstra(edge_weights)
-        for source, (predecessors, distances) in dijkstra_results.items():
-            dijkstra.run(source)
-            self.assertEqual(dijkstra.get_predecessors(), predecessors)
-            self.assertDictAlmostEqual(dijkstra.get_distances(), distances)
+    predecessors = {
+        1: {2: 1, 3: 1, 4: 3, 5: 6, 6: 3},
+        2: {1: 2, 3: 2, 4: 2, 5: 6, 6: 3},
+        3: {1: 3, 2: 3, 4: 3, 5: 6, 6: 3},
+        4: {1: 3, 2: 4, 3: 4, 5: 4, 6: 3},
+        5: {1: 3, 2: 4, 3: 6, 4: 5, 6: 5},
+        6: {1: 3, 2: 3, 3: 6, 4: 3, 5: 6}
+    }
 
+    distances = {
+        1: {1: 0, 2: 7, 3: 9, 4: 20, 5: 20, 6: 11},
+        2: {1: 7, 2: 0, 3: 10, 4: 15, 5: 21, 6: 12},
+        3: {1: 9, 2: 10, 3: 0, 4: 11, 5: 11, 6: 2},
+        4: {1: 20, 2: 15, 3: 11, 4: 0, 5: 6, 6: 13},
+        5: {1: 20, 2: 21, 3: 11, 4: 6, 5: 0, 6: 9},
+        6: {1: 11, 2: 12, 3: 2, 4: 13, 5: 9, 6: 0}
+    }
+
+    paths = {
+        1: {1: [1], 2: [1, 2], 3: [1, 3], 4: [1, 3, 4], 5: [1, 3, 6, 5], 6: [1, 3, 6]},
+        2: {1: [2, 1], 2: [2], 3: [2, 3], 4: [2, 4], 5: [2, 3, 6, 5], 6: [2, 3, 6]},
+        3: {1: [3, 1], 2: [3, 2], 3: [3], 4: [3, 4], 5: [3, 6, 5], 6: [3, 6]},
+        4: {1: [4, 3, 1], 2: [4, 2], 3: [4, 3], 4: [4], 5: [4, 5], 6: [4, 3, 6]},
+        5: {1: [5, 6, 3, 1], 2: [5, 4, 2], 3: [5, 6, 3], 4: [5, 4], 5: [5], 6: [5, 6]},
+        6: {1: [6, 3, 1], 2: [6, 3, 2], 3: [6, 3], 4: [6, 3, 4], 5: [6, 5], 6: [6]}
+    }
+
+    dijkstra = None
+
+    @classmethod
+    def setUpClass(cls):
+        # Make the graph undirected.
+        inverted_edge_weights = {(b, a): c for (a, b), c in TestDijsktra.edge_weights.items()}
+        TestDijsktra.edge_weights.update(inverted_edge_weights)
+
+    def setUp(self):
+        TestDijsktra.dijkstra = Dijkstra(TestDijsktra.edge_weights)
+
+    def tearDown(self):
+        TestDijsktra.dijkstra = None
+
+    def test_dijkstra_predecessors(self):
+        for source in TestDijsktra.nodes:
+            TestDijsktra.dijkstra.run(source)
+            self.assertEqual(TestDijsktra.dijkstra.get_predecessors(), TestDijsktra.predecessors[source])
+
+    def test_dijkstra_distances(self):
+        for source in TestDijsktra.nodes:
+            TestDijsktra.dijkstra.run(source)
+            self.assertEqual(TestDijsktra.dijkstra.get_distances(), TestDijsktra.distances[source])
+
+    def test_dijkstra_path_to(self):
+        for source in TestDijsktra.nodes:
+            TestDijsktra.dijkstra.run(source)
+            for target in TestDijsktra.nodes:
+                self.assertEqual(TestDijsktra.dijkstra.path_to(target), TestDijsktra.paths[source][target])
 
 if __name__ == "__main__":
     unittest.main()

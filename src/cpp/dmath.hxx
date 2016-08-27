@@ -141,8 +141,16 @@ namespace dmath
         );
 
         /**
-         * Returns predecessors that were computed by run(). If a node has no predecessor (because it is not reachable
-         * or because it is the source node), it is not present in the map.
+         * Returns the shortest path from source to target that was computed by run(). The end points are included.
+         * Throws a runtime error if source and target are not connected.
+         */
+        std::vector<size_t> path_to(
+                size_t const target
+        ) const;
+
+        /**
+         * Returns the predecessors that were computed by run(). If a node has no predecessor (because it is not
+         * reachable or because it is the source node), it is not present in the map.
          */
         std::map<size_t, size_t> const & get_predecessors() const;
 
@@ -180,6 +188,7 @@ namespace dmath
         InternalEdgeWeights const edge_weights;
         std::map<size_t, WeightType> distance;
         std::map<size_t, size_t> predecessor;
+        size_t source;
     };
 
     ///////////////////////////////////////////////

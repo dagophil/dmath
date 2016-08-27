@@ -12,7 +12,8 @@ namespace dmath
             EdgeWeights const & edge_weights
     ) :
         nodes(this->extract_nodes(edge_weights)),
-        edge_weights(this->extract_weights(edge_weights))
+        edge_weights(this->extract_weights(edge_weights)),
+        source(std::numeric_limits<size_t>::max())
     {}
 
     void Dijkstra::run(size_t const source)
@@ -37,16 +38,32 @@ namespace dmath
                 auto distance_uv = v_pair.second;
                 if (queue.contains(v))
                 {
-                    auto alternative = distance.at(u) + distance_uv;
-                    if (alternative < distance.at(v))
+                    auto alternative = this->distance.at(u) + distance_uv;
+                    if (alternative < this->distance.at(v))
                     {
-                        distance[v] = alternative;
+                        this->distance[v] = alternative;
                         predecessor[v] = u;
                     }
                 }
             }
             queue.reweight();
         }
+    }
+
+    std::vector<size_t> Dijkstra::path_to(
+            size_t const target
+    ) const {
+        std::vector<size_t> reversed_path = {target};
+        size_t current = target;
+        while (current != this->source)
+        {
+            auto it = this->predecessor.find(current);
+            if (it == this->predecessor.end())
+                throw std::runtime_error("source and target are not connected.");
+            current = it->second;
+            reversed_path.push_back(current);
+        }
+        return std::vector<size_t>(reversed_path.rbegin(), reversed_path.rend());
     }
 
     std::map<size_t, size_t> const & Dijkstra::get_predecessors() const
@@ -87,6 +104,7 @@ namespace dmath
 
     void Dijkstra::init(size_t const source)
     {
+        this->source = source;
         this->predecessor.clear();
         this->distance.clear();
         for (auto node : this->nodes)
