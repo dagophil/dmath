@@ -43,10 +43,10 @@ namespace dmath
                     {
                         this->distance[v] = alternative;
                         predecessor[v] = u;
+                        queue.reweight(v);
                     }
                 }
             }
-            queue.reweight();
         }
     }
 

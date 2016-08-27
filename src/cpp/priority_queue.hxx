@@ -43,10 +43,15 @@ namespace dmath
         T const & top() const;
 
         /**
-         * Resort all items using the stored scorer.
-         * This method should be used if the score of item x changes after x has been inserted into the queue.
+         * Remove the given item from the queue.
          */
-        void reweight();
+        void erase(T const & item);
+
+        /**
+         * Resort the given item into the queue.
+         * This method should be used if the score of the given item changed after it has been inserted into the queue.
+         */
+        void reweight(T const & item);
 
         /**
          * Return true if the queue contains the given item.
@@ -125,15 +130,23 @@ namespace dmath
     }
 
     template <typename T, typename SCORER>
-    inline void PriorityQueue<T, SCORER>::reweight()
+    inline void PriorityQueue<T, SCORER>::erase(T const & item)
     {
-        auto comp = [this](T const & a, T const & b)
+        auto it = std::find(this->items.begin(), this->items.end(), item);
+        if (it != this->items.end())
         {
-            return this->scorer(a) > this->scorer(b);
-        };
-        auto const indices = index_sort(this->items.begin(), this->items.end(), comp);
-        apply_index_sort(this->items.begin(), this->items.end(), indices);
-        apply_index_sort(this->item_weight.begin(), this->item_weight.end(), indices);
+            auto i = std::distance(this->items.begin(), it);
+            this->items.erase(it);
+            this->item_weight.erase(this->item_weight.begin()+i);
+        }
+    }
+
+    template <typename T, typename SCORER>
+    inline void PriorityQueue<T, SCORER>::reweight(
+            T const & item
+    ){
+        this->erase(item);
+        this->push(item);
     }
 
     template <typename T, typename SCORER>
