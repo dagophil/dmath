@@ -301,15 +301,6 @@ class TestDijsktra(unittest.TestCase):
         (5, 6): 9
     }
 
-    predecessors = {
-        1: {2: 1, 3: 1, 4: 3, 5: 6, 6: 3},
-        2: {1: 2, 3: 2, 4: 2, 5: 6, 6: 3},
-        3: {1: 3, 2: 3, 4: 3, 5: 6, 6: 3},
-        4: {1: 3, 2: 4, 3: 4, 5: 4, 6: 3},
-        5: {1: 3, 2: 4, 3: 6, 4: 5, 6: 5},
-        6: {1: 3, 2: 3, 3: 6, 4: 3, 5: 6}
-    }
-
     distances = {
         1: {1: 0, 2: 7, 3: 9, 4: 20, 5: 20, 6: 11},
         2: {1: 7, 2: 0, 3: 10, 4: 15, 5: 21, 6: 12},
@@ -342,21 +333,17 @@ class TestDijsktra(unittest.TestCase):
     def tearDown(self):
         TestDijsktra.dijkstra = None
 
-    def test_dijkstra_predecessors(self):
-        for source in TestDijsktra.nodes:
-            TestDijsktra.dijkstra.run(source)
-            self.assertEqual(TestDijsktra.dijkstra.get_predecessors(), TestDijsktra.predecessors[source])
-
-    def test_dijkstra_distances(self):
-        for source in TestDijsktra.nodes:
-            TestDijsktra.dijkstra.run(source)
-            self.assertEqual(TestDijsktra.dijkstra.get_distances(), TestDijsktra.distances[source])
-
     def test_dijkstra_path_to(self):
         for source in TestDijsktra.nodes:
             TestDijsktra.dijkstra.run(source)
             for target in TestDijsktra.nodes:
                 self.assertEqual(TestDijsktra.dijkstra.path_to(target), TestDijsktra.paths[source][target])
+
+    def test_dijkstra_distance_to(self):
+        for source in TestDijsktra.nodes:
+            TestDijsktra.dijkstra.run(source)
+            for target in TestDijsktra.nodes:
+                self.assertEqual(TestDijsktra.dijkstra.distance_to(target), TestDijsktra.distances[source][target])
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,5 +1,5 @@
 # distutils: language=c++
-# distutils: sources=[src/cpp/primes.cpp, src/cpp/cfr.cpp, src/cpp/farey.cpp, src/cpp/dijkstra.cpp]
+# distutils: sources=[src/cpp/primes.cpp, src/cpp/cfr.cpp, src/cpp/farey.cpp]
 
 from libcpp.map cimport map
 from libcpp.pair cimport pair
@@ -21,12 +21,11 @@ cdef extern from "cpp/dmath.hxx":
     cdef pair[size_t, size_t] _cpp_next_farey "dmath::next_farey" (pair[size_t, size_t], stack[pair[size_t, size_t]], size_t) except +
     cdef vector[size_t] _cpp_number_of_summations "dmath::number_of_summations" (vector[size_t], size_t)
 
-    cdef cppclass _cpp_Dijkstra "dmath::Dijkstra":
+    cdef cppclass _cpp_Dijkstra "dmath::Dijkstra<size_t, double>":
         _cpp_Dijkstra(map[pair[size_t, size_t], double]) except +
-        void run(size_t)
+        void run(size_t) except +
         vector[size_t] path_to(size_t) except +
-        map[size_t, double] get_distances()
-        map[size_t, size_t] get_predecessors()
+        double distance_to(size_t) except +
 
 
 def is_prime(size_t n):
@@ -106,8 +105,5 @@ cdef class Dijkstra:
     def path_to(self, size_t target):
         return self.dijkstra.path_to(target)
 
-    def get_predecessors(self):
-        return self.dijkstra.get_predecessors()
-
-    def get_distances(self):
-        return self.dijkstra.get_distances()
+    def distance_to(self, size_t target):
+        return self.dijkstra.distance_to(target)
