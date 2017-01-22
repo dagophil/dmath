@@ -10,6 +10,13 @@ namespace dmath
 {
 
     /**
+     * Returns true if the given number is a perfect square.
+     */
+    bool is_square(
+            size_t const a
+    );
+
+    /**
      * Returns the greatest common divisor of a and b.
      */
     template <typename T>
@@ -41,7 +48,5 @@ namespace dmath
     );
 
 } // namespace dmath
-
-#include "utility.inl"
 
 #endif

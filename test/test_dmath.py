@@ -1,7 +1,7 @@
 import os
 import unittest
 
-from dmath import is_prime, eratosthenes, prime_factors, euler_phi, gcd, cfr, approx_cfr, restricted_farey, farey, \
+from dmath import is_square, is_prime, eratosthenes, prime_factors, euler_phi, gcd, cfr, approx_cfr, restricted_farey, farey, \
     number_of_summations, Dijkstra
 
 
@@ -15,6 +15,30 @@ def assertDictAlmostEqual(test_case, d0, d1):
 
 
 unittest.TestCase.assertDictAlmostEqual = assertDictAlmostEqual
+
+
+class TestIsSquare(unittest.TestCase):
+
+    def test_first_ten_non_squares_are_non_square(self):
+        for x in (2, 3, 5, 6, 7, 8, 10, 11, 12, 13):
+            self.assertFalse(is_square(x))
+
+    def test_first_ten_squares_are_squares(self):
+        for x in (0, 1, 4, 9, 16, 25, 36, 49, 64, 81):
+            self.assertTrue(is_square(x))
+
+    def test_is_square_with_large_input(self):
+        for x in (123**2, 1234**2, 12345**2):
+            self.assertTrue(is_square(x))
+
+    def test_is_not_square_with_large_input(self):
+        for x in (123**2-5, 1234**2+5, 12345**2+100):
+            self.assertFalse(is_square(x))
+
+    def test_is_square_with_negative_input_raises_overflow_error(self):
+        for x in (-1, -5, -33):
+            with self.assertRaises(OverflowError):
+                is_square(x)
 
 
 class TestIsPrime(unittest.TestCase):

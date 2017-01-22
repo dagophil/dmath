@@ -6,6 +6,8 @@
 #include <stdexcept>
 #include <tuple>
 
+#include <dmath/utility.inl>
+
 namespace dmath
 {
     namespace detail

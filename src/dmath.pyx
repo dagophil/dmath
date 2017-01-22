@@ -1,6 +1,6 @@
 # distutils: language=c++
 # distutils: include_dirs=[src]
-# distutils: sources=[src/dmath/cfr.cpp, src/dmath/farey.cpp, src/dmath/primes.cpp]
+# distutils: sources=[src/dmath/cfr.cpp, src/dmath/farey.cpp, src/dmath/utility.cpp, src/dmath/primes.cpp]
 
 from libcpp.map cimport map
 from libcpp.pair cimport pair
@@ -10,6 +10,7 @@ from libcpp cimport bool
 
 
 cdef extern from "dmath/utility.hxx":
+    cdef bool _cpp_is_square "dmath::is_square" (size_t)
     cdef size_t _cpp_gcd "dmath::gcd" (size_t, size_t)
 
 
@@ -38,6 +39,10 @@ cdef extern from "dmath/dijkstra.hxx":
         void run(size_t) except +
         vector[size_t] path_to(size_t) except +
         double distance_to(size_t) except +
+
+
+def is_square(size_t n):
+    return _cpp_is_square(n)
 
 
 def is_prime(size_t n):

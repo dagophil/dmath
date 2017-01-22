@@ -1,8 +1,6 @@
 #ifndef DMATH_PRIORITY_QUEUE_HXX
 #define DMATH_PRIORITY_QUEUE_HXX
 
-#include <dmath/utility.hxx>
-
 #include <type_traits>
 #include <vector>
 

@@ -4,6 +4,8 @@
 #include <set>
 #include <stdexcept>
 
+#include <dmath/utility.inl>
+
 namespace dmath
 {
 
