@@ -9,7 +9,8 @@ ext = cythonize("src/dmath.pyx",
                     "wraparound": False,
                     "nonecheck": False,
                     "cdivision": True
-                })
+                },
+                language="c++")
 
 
 if not sys.platform.startswith("win"):
