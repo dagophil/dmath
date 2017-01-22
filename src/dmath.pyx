@@ -1,5 +1,6 @@
 # distutils: language=c++
-# distutils: sources=[src/cpp/primes.cpp, src/cpp/cfr.cpp, src/cpp/farey.cpp]
+# distutils: include_dirs=[src]
+# distutils: sources=[src/dmath/cfr.cpp, src/dmath/farey.cpp, src/dmath/primes.cpp]
 
 from libcpp.map cimport map
 from libcpp.pair cimport pair
@@ -8,19 +9,30 @@ from libcpp.vector cimport vector
 from libcpp cimport bool
 
 
-cdef extern from "cpp/dmath.hxx":
+cdef extern from "dmath/utility.hxx":
+    cdef size_t _cpp_gcd "dmath::gcd" (size_t, size_t)
+
+
+cdef extern from "dmath/primes.hxx":
     cdef bool _cpp_is_prime "dmath::is_prime" (size_t)
     cdef vector[size_t] _cpp_eratosthenes "dmath::eratosthenes" (size_t)
     cdef vector[pair[size_t, size_t]] _cpp_prime_factors "dmath::prime_factors" (size_t) except +
     cdef size_t _cpp_euler_phi "dmath::euler_phi" (size_t)
-    cdef size_t _cpp_gcd "dmath::gcd" (size_t, size_t)
+
+
+cdef extern from "dmath/cfr.hxx":
     cdef pair[vector[size_t], size_t] _cpp_cfr "dmath::cfr" (size_t) except +
     cdef pair[vector[size_t], size_t] _cpp_cfr "dmath::cfr" (size_t, size_t) except +
     cdef pair[size_t, size_t] _cpp_approx_cfr "dmath::approx_cfr" (size_t, vector[size_t], size_t)
+
+
+cdef extern from "dmath/farey.hxx":
     cdef stack[pair[size_t, size_t]] _cpp_create_farey_stack "dmath::create_farey_stack" ()
     cdef pair[size_t, size_t] _cpp_next_farey "dmath::next_farey" (pair[size_t, size_t], stack[pair[size_t, size_t]], size_t) except +
     cdef vector[size_t] _cpp_number_of_summations "dmath::number_of_summations" (vector[size_t], size_t)
 
+
+cdef extern from "dmath/dijkstra.hxx":
     cdef cppclass _cpp_Dijkstra "dmath::Dijkstra<size_t, double>":
         _cpp_Dijkstra(map[pair[size_t, size_t], double]) except +
         void run(size_t) except +

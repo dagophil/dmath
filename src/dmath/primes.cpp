@@ -1,4 +1,4 @@
-#include "dmath.hxx"
+#include "primes.hxx"
 
 namespace dmath
 {

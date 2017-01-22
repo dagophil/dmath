@@ -1,13 +1,16 @@
-#include "dmath.hxx"
+#include "cfr.hxx"
+#include <dmath/utility.hxx>
 
 #include <cmath>
+#include <set>
+#include <tuple>
 
 namespace dmath
 {
     namespace detail
     {
         /**
-         * Compute the next value in the continued fraction of sqrt(d) and update the current variables.
+         * Computes the next value in the continued fraction of sqrt(d) and update the current variables.
          */
         size_t next_cfr(
                 long & b,
@@ -72,7 +75,7 @@ namespace dmath
     namespace detail
     {
         /**
-         * Get the i-th value of the given continued fraction.
+         * Returns the i-th value of the given continued fraction.
          */
         size_t eval_cfr(
                 size_t i,

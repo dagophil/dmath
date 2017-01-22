@@ -1,13 +1,15 @@
-#ifndef DMATH_UTILITY_HXX
-#define DMATH_UTILITY_HXX
-
-#include <algorithm>
-#include <iterator>
-#include <numeric>
-#include <vector>
+#include "utility.hxx"
 
 namespace dmath
 {
+
+    template <typename T>
+    T gcd(
+            T const a,
+            T const b
+    ){
+        return b == 0 ? a : gcd(b, a % b);
+    }
 
     template <typename ITER, typename COMP>
     std::vector<size_t> index_sort(ITER begin, ITER end, COMP const & comp)
@@ -34,6 +36,4 @@ namespace dmath
         std::copy(v.begin(), v.end(), begin);
     }
 
-} // namespace dmath
-
-#endif
+}

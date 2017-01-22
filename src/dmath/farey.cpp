@@ -1,4 +1,8 @@
-#include "dmath.hxx"
+#include "farey.hxx"
+#include <dmath/utility.hxx>
+
+#include <set>
+#include <stdexcept>
 
 namespace dmath
 {
