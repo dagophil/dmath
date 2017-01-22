@@ -47,7 +47,7 @@ namespace dmath
     );
 
     /**
-     * Counts the number of possibilities to write x as a sum of the numbers in candidates for each x in [0, n].
+     * Returns a vector v where v[x] is the number of possibilities to write x as a sum of the numbers in candidates.
      */
     std::vector<size_t> number_of_summations(
             std::vector<size_t> const & candidates,
