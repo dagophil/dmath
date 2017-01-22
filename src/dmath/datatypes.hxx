@@ -1,6 +1,7 @@
 #ifndef DMATH_DATATYPES_HXX
 #define DMATH_DATATYPES_HXX
 
+#include <cstddef>
 #include <utility>
 
 namespace dmath
