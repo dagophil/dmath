@@ -4,8 +4,6 @@
 #include <set>
 #include <stdexcept>
 
-#include <dmath/utility.inl>
-
 namespace dmath
 {
 
@@ -46,6 +44,12 @@ namespace dmath
             Pair const & right,
             size_t const n
     ){
+        if (n == 0)
+            throw std::runtime_error("Cannot compute Farey sequence of order zero.");
+        if (left.first > left.second)
+            throw std::runtime_error("left must be less than or equal to 1.");
+        if (right.first > right.second)
+            throw std::runtime_error("right must be less than or equal to 1.");
         if (left.first * right.second >= left.second * right.first)
             throw std::runtime_error("left must be less than right.");
         if (gcd(left.first, left.second) != 1 || gcd(right.first, right.second) != 1)

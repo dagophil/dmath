@@ -243,6 +243,16 @@ class TestRestrictedFarey(unittest.TestCase):
         with self.assertRaises(RuntimeError):
             next(restricted_farey((1, 3), (1, 2), 0))
 
+    def test_restricted_farey_with_right_greater_than_left_raises_runtime_error(self):
+        with self.assertRaises(RuntimeError):
+            next(restricted_farey((1, 2), (1, 3), 8))
+
+    def test_restricted_farey_with_input_greater_than_one_raises_runtime_error(self):
+        with self.assertRaises(RuntimeError):
+            next(restricted_farey((1, 3), (2, 1), 8))
+        with self.assertRaises(RuntimeError):
+            next(restricted_farey((2, 1), (3, 1), 8))
+
     def test_restricted_farey_with_unreduced_fractions_raises_runtime_error(self):
         with self.assertRaises(RuntimeError):
             next(restricted_farey((2, 6), (1, 2), 8))

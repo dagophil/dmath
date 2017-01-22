@@ -87,6 +87,10 @@ def approx_cfr(size_t n, d=None, cfrac=None, max_iter=None):
 def restricted_farey(pair[size_t, size_t] left, pair[size_t, size_t] right, size_t n):
     if n == 0:
         raise RuntimeError("Cannot compute Farey sequence of order zero.")
+    if left.first > left.second:
+        raise RuntimeError("left must be less than or equal to 1.")
+    if right.first > right.second:
+        raise RuntimeError("right must be less than or equal to 1.")
     if left.first * right.second >= left.second * right.first:
         raise RuntimeError("left must be less than right.")
     if _cpp_gcd(left.first, left.second) != 1 or _cpp_gcd(right.first, right.second) != 1:

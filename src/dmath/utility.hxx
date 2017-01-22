@@ -49,4 +49,6 @@ namespace dmath
 
 } // namespace dmath
 
+#include "utility.inl"
+
 #endif
