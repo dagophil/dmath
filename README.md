@@ -157,7 +157,8 @@ in `candidates`.
 
 #### Dijkstra:
 The `Dijkstra` class can be used to run Dijkstra's algorithm. As node descriptor, arbitrary positive integers can be
-used. Whether the node descriptors are consecutive or not has no influence on the performance.
+used. The node descriptors are only used to distinguish the nodes. The actual value, or whether the node descriptors are
+consecutive or not has no influence on the performance.
 
 ##### Dijkstra.\_\_init\_\_(self, edge_weights):
 Initializes the class with the given edge weights. The argument `edge_weights` must be a dict, where the key is an edge
