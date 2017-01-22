@@ -3,6 +3,7 @@
 
 #include <cmath>
 #include <set>
+#include <stdexcept>
 #include <tuple>
 
 namespace dmath

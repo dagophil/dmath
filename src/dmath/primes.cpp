@@ -1,5 +1,7 @@
 #include "primes.hxx"
 
+#include <stdexcept>
+
 namespace dmath
 {
 

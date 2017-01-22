@@ -2,6 +2,7 @@
 #include <dmath/priority_queue.hxx>
 
 #include <set>
+#include <stdexcept>
 
 namespace dmath
 {
